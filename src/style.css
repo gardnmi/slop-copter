@@ -42,7 +42,7 @@ canvas {
   display: block; position: absolute; inset: 0; width: 100%; height: 100%;
   image-rendering: pixelated; touch-action: none; outline: none;
 }
-.overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; padding: 16px; }
+.overlay { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; pointer-events: none; padding: 16px; }
 .dialog, .instructions {
   pointer-events: auto; background: var(--paper); color: var(--ink);
   border: 2px solid var(--ink); padding: 28px; max-width: 100%;
@@ -51,7 +51,7 @@ canvas {
 .dialog-eyebrow { font-size: 10px; letter-spacing: .12em; color: var(--subtle); margin: 0 0 20px; }
 h1, h2 { font-family: Georgia, "Times New Roman", serif; font-size: 31px; line-height: 1.15; font-weight: normal; margin: 0 0 18px; }
 #dialog-copy { font-size: 11px; line-height: 1.8; margin: 0 0 20px; }
-.key-guide { display: flex; gap: 20px; justify-content: center; font-size: 10px; margin-bottom: 24px; }
+.key-guide { display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; font-size: 10px; margin-bottom: 24px; }
 .key-guide > span { display: flex; align-items: center; gap: 3px; }
 kbd { font: inherit; border: 1px solid var(--line); padding: 3px 5px; min-width: 21px; }
 .primary-button { min-height: 42px; min-width: 200px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: 12px; }
