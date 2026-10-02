@@ -6,6 +6,7 @@ import { viewportSize, yokeRect } from './layout.js';
 import { BossAudio } from './boss-audio.js';
 import { TEST_LEVELS, createLevel } from './level-select.js';
 import { gamepadControls } from './gamepad.js';
+import { controllerMenuItems, moveControllerMenu } from './gamepad-menu.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('game');
@@ -60,6 +61,7 @@ const jumpSources = new Set();
 const deckTouches = new Map();
 const deckButtons = [...document.querySelectorAll('[data-deck-action]')];
 let padState = gamepadControls(null), previousPad = gamepadControls(null), padBlocked = false;
+let activePad = null, padUsed = false, padReconnecting = false, padMenuDirection = '', padMenuRepeat = 0;
 const directionButtons = [...document.querySelectorAll('[data-direction]')];
 const movementKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyA', 'KeyS', 'KeyD'];
 const landingFlight = () => !game.orbit.active && !game.boarding.active &&
@@ -145,7 +147,7 @@ function drop() {
 }
 function pressAction(source) {
   if (game.orbit.active) {
-    if (!['Space', 'KeyJ'].includes(source) || jumpSources.has(source) || !game.orbit.canAct && !game.orbit.dead) return;
+    if (!['Space', 'KeyJ', 'gamepad', 'gamepad-shoot'].includes(source) || jumpSources.has(source) || !game.orbit.canAct && !game.orbit.dead) return;
     jumpSources.add(source); drop(); return;
   }
   if (!game.boarding.active && (game.assault.active || !game.runner.active)) { drop(); return; }
@@ -387,19 +389,80 @@ for (const button of directionButtons) {
   }
 }
 function pollGamepad() {
-  if (game.orbit.active) { padState = gamepadControls(null); return; }
   let pad = null;
-  try { pad = [...(navigator.getGamepads?.() || [])].find(p => p?.connected && p.mapping === 'standard'); } catch { /* Browser policy may disable gamepads. */ }
+  try {
+    const pads = [...(navigator.getGamepads?.() || [])].filter(p => p?.connected && p.mapping === 'standard');
+    pad = pads.find(p => `${p.index ?? 0}:${p.id ?? ''}` === activePad) || pads[0];
+  } catch { /* Browser policy may disable gamepads. */ }
+  const identity = pad ? `${pad.index ?? 0}:${pad.id ?? ''}` : null;
+  if (identity !== activePad) {
+    if (activePad !== null) {
+      releaseAction('gamepad'); releaseAction('gamepad-shoot');
+      if (padUsed && started) pause(true);
+      padState = gamepadControls(null); padReconnecting = true;
+    }
+    activePad = identity; padUsed = false;
+    previousPad = gamepadControls(null);
+    $('controller-hint').hidden = !pad;
+    $('controller-status').textContent = pad ? 'Controller connected. Left stick or D-pad moves. A / Cross confirms; B / Circle goes back. Menu / Start pauses; View / Share opens Options.'
+      : 'Connect an Xbox, PlayStation or other standard controller and press a button to activate it.';
+  }
   const next = gamepadControls(pad);
+  if (padReconnecting) {
+    if (pad && !Object.values(next).some(Boolean)) padReconnecting = false;
+    previousPad = next; padState = gamepadControls(null); return;
+  }
+  const rise = key => next[key] && !previousPad[key];
+  if (Object.values(next).some(Boolean)) { padUsed = true; document.body.classList.add('controller-input'); }
+  if (!document.hidden && loaded) {
+    if (rise('options') && !levelDialog.open) {
+      toggleHelp();
+      if (!$('instructions').hidden) $('sound').focus();
+      else if (game.paused) $('begin').focus();
+      previousPad = next; return;
+    }
+    if (rise('pause')) {
+      if (levelDialog.open) levelDialog.close('cancel');
+      else if (!$('instructions').hidden || !started || game.paused) begin();
+      else { pause(); $('begin').focus(); }
+      previousPad = next; return;
+    }
+    if (!started || game.paused || levelDialog.open || !$('instructions').hidden) {
+      padState = gamepadControls(null);
+      const root = levelDialog.open ? levelDialog : !$('instructions').hidden ? $('instructions') : $('game-screen');
+      const menuItems = controllerMenuItems(root);
+      const x = Math.abs(next.x) > .5 ? Math.sign(next.x) : 0, y = Math.abs(next.y) > .5 ? Math.sign(next.y) : 0;
+      const direction = `${x},${y}`;
+      if ((x || y) && (direction !== padMenuDirection || ++padMenuRepeat >= 20)) {
+        moveControllerMenu(root, x, y); padMenuRepeat = direction !== padMenuDirection ? 0 : 14;
+      }
+      if (!x && !y) padMenuRepeat = 0;
+      padMenuDirection = direction;
+      if (rise('jump')) {
+        const target = document.activeElement;
+        if (levelDialog.open && target === $('level-select')) startLevel(target.value);
+        else if (menuItems.includes(target)) target.click();
+        else if (levelDialog.open || !$('instructions').hidden) menuItems[0]?.focus();
+        else begin();
+      } else if (rise('grenade')) {
+        if (levelDialog.open) levelDialog.close('cancel');
+        else if (!$('instructions').hidden) { toggleHelp(); if (game.paused) $('begin').focus(); }
+        else if (started && game.paused) begin();
+      }
+      previousPad = next; return;
+    }
+  }
+  padMenuDirection = ''; padMenuRepeat = 0;
   if (padBlocked) {
     if (!Object.values(next).some(Boolean)) padBlocked = false;
     previousPad = next; padState = gamepadControls(null); return;
   }
   padState = next;
-  if (next.pause && !previousPad.pause && loaded && !levelDialog.open) { if (started) pause(); else begin(); previousPad = next; return; }
   if (!next.jump && previousPad.jump) releaseAction('gamepad');
+  if (!next.shoot && previousPad.shoot) releaseAction('gamepad-shoot');
   if (loaded && started && !game.paused && !levelDialog.open) {
-    if (next.jump && !previousPad.jump) pressAction('gamepad');
+    if (rise('jump') && !landingFlight()) pressAction('gamepad');
+    if (game.orbit.active && rise('shoot')) pressAction('gamepad-shoot');
     if (!game.orbit.active && game.boarding.playing && next.grenade && !previousPad.grenade) game.boarding.throwGrenade();
   }
   previousPad = next;
@@ -409,7 +472,7 @@ function steer() {
   const held = [...touches.values()];
   const left = keys.has('ArrowLeft') || keys.has('KeyA') || held.includes('left');
   const right = keys.has('ArrowRight') || keys.has('KeyD') || held.includes('right');
-  const up = keys.has('ArrowUp') || keys.has('KeyW') || held.includes('up') || (landingFlight() && keys.has('Space'));
+  const up = keys.has('ArrowUp') || keys.has('KeyW') || held.includes('up') || (landingFlight() && (keys.has('Space') || padState.jump || padState.shoot));
   const down = keys.has('ArrowDown') || keys.has('KeyS') || held.includes('down');
   // Each chapter interprets the yoke: recovery uses tilt and lift, preserving
   // momentum when the pilot releases the keys.
@@ -477,7 +540,7 @@ function syncUI() {
     button.setAttribute('aria-label', deck.active ? ({ up: 'Aim up', down: 'Duck', left: 'Move left', right: 'Move right' })[direction]
       : air.recovery ? ({ up: 'Lift', down: 'Cut lift', left: 'Tilt left', right: 'Tilt right' })[direction] : `Fly ${direction}`);
   }
-  if (orbit.active) canvas.setAttribute('aria-label', 'Cloudfall. The broken lift leads directly into the descent. Keyboard only: left and right arrows or A and D move. J or Space jumps on a ledge; release and press again to fire your gun while airborne. Landing or stomping white enemies reloads. Shoot red spiked enemies; they cannot be stomped. Deaths automatically restart the checkpoint. P pauses. R restarts.');
+  if (orbit.active) canvas.setAttribute('aria-label', 'Cloudfall. Left and right arrows, A and D, left stick or D-pad move. J, Space or controller A jumps on a ledge; release and press again to fire your gun while airborne. Controller X or right trigger also jumps and fires. Landing or stomping white enemies reloads. Shoot red spiked enemies; they cannot be stomped. Deaths automatically restart the checkpoint. P or Menu pauses. R restarts.');
   else if (deck.active) canvas.setAttribute('aria-label', 'Carrier deck run-and-gun. Arrows or WASD move. J shoots, K jumps, L throws a grenade. Down ducks. Up aims upward. Down plus K drops through catwalks. Gamepad X shoots, A jumps, B throws. Destroy both phases of the spacecraft boss. Deaths automatically restart the checkpoint. P pauses. R restarts.');
   else if (air.recovery) canvas.setAttribute('aria-label', 'Carrier landing. Up, W or Space powers lift and uses fuel. Left and Right or A and D tilt. Release lift to descend; momentum carries on. Catch the moving carrier and land level on the lit aft pad with low relative speed and a gentle descent. Crashes automatically restart the landing. P pauses.');
   else if (air.active) canvas.setAttribute('aria-label', 'Air assault. Arrows or WASD fly. Cannon fires automatically. Defeat the enemy airship and reach the friendly carrier for landing. Deaths automatically restart the checkpoint. P pauses. R restarts.');

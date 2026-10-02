@@ -19,6 +19,8 @@ body { background: var(--paper); color: var(--ink); }
 button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 button:disabled { opacity: .45; cursor: default; }
 button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.controller-input :is(button, input, select):focus { outline: 2px solid var(--accent); outline-offset: 3px; }
+.controller-hint { font-size: 10px; line-height: 1.7; margin: -8px 0 18px; }
 button:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
 [hidden] { display: none !important; }
 .game-screen {

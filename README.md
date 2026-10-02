@@ -80,12 +80,26 @@ their proportions and the dashboard stays along the bottom.
 | Alternate steering | Touch directions or drag the instrument yoke |
 | Drop | Space, click the sky or helicopter, or the touch Drop button |
 | Liquid hunter | Arrow keys dodge homing rockets; Space drops grenades; five hits defeat it |
-| Cloudfall | Keyboard only: Left/Right or A/D move; J or Space jumps on rock, release and press again to fire the handheld gun in the air; land or stomp to reload |
+| Cloudfall | Left/Right, A/D, left stick or D-pad move; J or Space jumps on rock, release and press again to fire the handheld gun in the air; land or stomp to reload |
 | Pause / resume | P, Esc, or the toolbar; Space also resumes |
 | Retry after defeat | Automatically restarts the current checkpoint after 1.2 seconds |
 | Start over | R or New game |
 | Options and instructions | ? or Options |
 | Fullscreen | F or Fullscreen |
+
+**Controllers work through the whole campaign**, including Cloudfall. Connect a
+standard Xbox, PlayStation or compatible gamepad and press a button to activate it.
+Left stick / D-pad moves; A / Cross starts, drops and jumps. Hold A / Cross or
+RT / R2 for lift when landing on the carrier. On deck, X / Square or RT / R2
+fires and B / Circle throws grenades. In Cloudfall, A / Cross, X / Square or
+RT / R2 jumps from a ledge and fires in the air; release after jumping before
+firing. Menu / Start pauses or resumes. View / Share opens Options; directions
+navigate menus, left / right adjusts sliders, A confirms and B goes back.
+Disconnecting an active controller pauses and releases its inputs. Reconnecting
+requires releasing held buttons before resuming. Keyboard and touch remain usable.
+
+Browsers may require an initial click or keyboard press to enable audio. Controller
+input uses the browser's [standard Gamepad mapping](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API).
 
 Directional controls request velocity through the same acceleration as the
 instrument yoke. Releasing the keys brakes gradually; pressing the opposite
@@ -317,7 +331,7 @@ combine branching routes, drillable gem pockets and enemies. Staying airborne
 builds a chain; landing banks gems, extra charge and health at successive
 thresholds. Collecting gems also triggers a temporary **Gem High** with stronger,
 faster gunfire. Three descent bands have their own
-checkpoints. This chapter uses keyboard controls only.
+checkpoints. This chapter supports keyboard and standard gamepads.
 The descent now follows the original Downwell recording: a narrow black shaft,
 white rock, red/white side scenery, animated reference sprites and impact clouds,
 an outlined life bar and a tall charge gauge. Connected cave shelves, breakable

@@ -52,7 +52,7 @@ test('standard gamepad movement and action buttons work; disconnect releases hel
   await advance(page, 10);
   expect(await page.evaluate(() => { const d = window.__stunt.game.boarding; return d.x > 100 && d.y < 230 && d.shots.length > 0 && d.grenades === 9; })).toBe(true);
   await page.evaluate(() => { testPad.connected = false; window.__stunt.game.boarding.shots = []; }); await advance(page, 10);
-  expect(await page.evaluate(() => { const d = window.__stunt.game.boarding; return [d.vx, d.fireHeld, d.jumpHeld, d.shots.length]; })).toEqual([0, false, false, 0]);
+  expect(await page.evaluate(() => { const g = window.__stunt.game, d = g.boarding; return [g.paused, d.fireHeld, d.jumpHeld, d.shots.length]; })).toEqual([true, false, false, 0]);
 });
 
 test('boss damage stays within the hull alpha and successful hits swap the sprite palette instead of drawing health bars', async ({ page }, info) => {

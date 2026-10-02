@@ -58,8 +58,10 @@ elevator encounter, and failed optional loads never block input.
 
 ## Play
 
-Keyboard only. Left/Right or A/D move. J or Space jumps from a ledge;
-release and press again in the air to fire. Hold to keep firing. Recoil brakes
+Keyboard and standard controllers work. Left/Right, A/D, left stick or D-pad move.
+J or Space jumps from a ledge; on a controller use A / Cross, X / Square or RT / R2
+for the same jump/fire action. Release and press again in the air to fire.
+Hold to keep firing. Recoil brakes
 the fall. Landing or stomping a white enemy reloads the eight-shot gun. Red
 armored enemies require shooting. P pauses; R restarts. Levels unlocks in the
 toolbar after completing the full loop and has no keyboard shortcut.
