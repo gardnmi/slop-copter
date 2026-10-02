@@ -57,7 +57,7 @@ test('cargo provides cover from rifle rounds and grenade stock survives checkpoi
 });
 
 test('standard gamepads map stick, d-pad and face buttons with a drift deadzone', () => {
-  const pad = { connected: true, axes: [.12, -.18], buttons: Array.from({ length: 16 }, () => ({ pressed: false })) };
+  const pad = { connected: true, mapping: 'standard', axes: [.12, -.18], buttons: Array.from({ length: 16 }, () => ({ pressed: false })) };
   assert.deepEqual(gamepadControls(pad), { x: 0, y: 0, shoot: false, jump: false, grenade: false, pause: false, options: false });
   pad.buttons[2].pressed = pad.buttons[0].pressed = pad.buttons[1].pressed = pad.buttons[14].pressed = true;
   assert.deepEqual(gamepadControls(pad), { x: -1, y: 0, shoot: true, jump: true, grenade: true, pause: false, options: false });

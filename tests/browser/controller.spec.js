@@ -83,3 +83,50 @@ test('disconnect pauses, releases fire and jump, and reconnect requires a fresh 
   expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(false);
   await button(page, 7, true); expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(true);
 });
+
+async function useRawGameSir(page) {
+  await page.evaluate(() => {
+    testPad.id = 'GameSir-G7 SE Controller for Xbox (Vendor: 3537 Product: 1082)';
+    testPad.mapping = '';
+    testPad.axes = [0, 0, 0, 0, -1, -1, 0, 0];
+    testPad.buttons = Array.from({ length: 15 }, () => ({ pressed: false, value: 0 }));
+  });
+  await advance(page, 2);
+}
+
+test('unmapped GameSir Xbox controller starts, moves with its hat, drops and opens menus', async ({ page }) => {
+  await open(page); await useRawGameSir(page);
+  await expect(page.locator('#controller-hint')).toBeVisible();
+  await expect(page.locator('#controller-status')).toContainText('GameSir-G7 SE');
+  await tap(page, 0); await expect(page.locator('#overlay')).toBeHidden();
+  const x = await page.evaluate(() => window.__stunt.game.copterX);
+  await page.evaluate(() => testPad.axes[6] = 1); await advance(page, 10);
+  expect(await page.evaluate(() => window.__stunt.game.copterX)).toBeGreaterThan(x);
+  await page.evaluate(() => testPad.axes[6] = 0); await tap(page, 0);
+  expect(await page.evaluate(() => window.__stunt.game.drops)).toBe(1);
+  await tap(page, 11); expect(await page.evaluate(() => window.__stunt.game.paused)).toBe(true);
+  await tap(page, 11); expect(await page.evaluate(() => window.__stunt.game.paused)).toBe(false);
+  await tap(page, 10); await expect(page.locator('#instructions')).toBeVisible();
+  await page.evaluate(() => testPad.axes[7] = 1); await advance(page);
+  await expect(page.locator('#music-volume')).toBeFocused();
+});
+
+test('GameSir raw X and analog RT fire and fully release in deck combat', async ({ page }) => {
+  await open(page, 'deck-raid'); await useRawGameSir(page);
+  await button(page, 3, true);
+  expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(true);
+  await button(page, 3, false);
+  expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(false);
+  await page.evaluate(() => testPad.axes[4] = 1); await advance(page);
+  expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(true);
+  await page.evaluate(() => testPad.axes[4] = -1); await advance(page);
+  expect(await page.evaluate(() => window.__stunt.game.boarding.fireHeld)).toBe(false);
+});
+
+test('unknown raw controllers show an explanation and preserve keyboard play', async ({ page }) => {
+  await open(page);
+  await page.evaluate(() => { testPad.mapping = ''; testPad.id = 'Unknown wheel'; }); await advance(page);
+  await expect(page.locator('#controller-hint')).toBeHidden();
+  await expect(page.locator('#controller-status')).toContainText('button layout is not supported');
+  await page.keyboard.press('Space'); await expect(page.locator('#overlay')).toBeHidden();
+});

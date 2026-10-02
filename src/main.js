@@ -5,7 +5,7 @@ import { Renderer } from './render.js';
 import { viewportSize, yokeRect } from './layout.js';
 import { BossAudio } from './boss-audio.js';
 import { TEST_LEVELS, createLevel } from './level-select.js';
-import { gamepadControls } from './gamepad.js';
+import { gamepadControls, gamepadLayout } from './gamepad.js';
 import { controllerMenuItems, moveControllerMenu } from './gamepad-menu.js';
 
 const $ = id => document.getElementById(id);
@@ -62,6 +62,7 @@ const deckTouches = new Map();
 const deckButtons = [...document.querySelectorAll('[data-deck-action]')];
 let padState = gamepadControls(null), previousPad = gamepadControls(null), padBlocked = false;
 let activePad = null, padUsed = false, padReconnecting = false, padMenuDirection = '', padMenuRepeat = 0;
+let controllerStatus = '';
 const directionButtons = [...document.querySelectorAll('[data-direction]')];
 const movementKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyA', 'KeyS', 'KeyD'];
 const landingFlight = () => !game.orbit.active && !game.boarding.active &&
@@ -389,11 +390,21 @@ for (const button of directionButtons) {
   }
 }
 function pollGamepad() {
-  let pad = null;
+  let pad = null, connected = [], unavailable = false;
   try {
-    const pads = [...(navigator.getGamepads?.() || [])].filter(p => p?.connected && p.mapping === 'standard');
+    connected = [...(navigator.getGamepads?.() || [])].filter(p => p?.connected);
+    const pads = connected.filter(p => gamepadLayout(p));
     pad = pads.find(p => `${p.index ?? 0}:${p.id ?? ''}` === activePad) || pads[0];
-  } catch { /* Browser policy may disable gamepads. */ }
+  } catch { unavailable = true; }
+  const status = pad ? `Controller connected: ${pad.id}. Left stick or D-pad moves. A / Cross confirms; B / Circle goes back. Menu / Start pauses; View / Share opens Options.`
+    : connected.length ? `Controller detected: ${connected[0].id}. This controller's button layout is not supported yet. Keyboard controls are available.`
+      : unavailable ? 'Controller access is blocked by this browser. Open the game directly in a browser tab.'
+        : 'Connect an Xbox, PlayStation or compatible controller and press a button to activate it.';
+  if (status !== controllerStatus) {
+    controllerStatus = status;
+    $('controller-status').textContent = status;
+    $('controller-hint').hidden = !pad;
+  }
   const identity = pad ? `${pad.index ?? 0}:${pad.id ?? ''}` : null;
   if (identity !== activePad) {
     if (activePad !== null) {
@@ -403,9 +414,6 @@ function pollGamepad() {
     }
     activePad = identity; padUsed = false;
     previousPad = gamepadControls(null);
-    $('controller-hint').hidden = !pad;
-    $('controller-status').textContent = pad ? 'Controller connected. Left stick or D-pad moves. A / Cross confirms; B / Circle goes back. Menu / Start pauses; View / Share opens Options.'
-      : 'Connect an Xbox, PlayStation or other standard controller and press a button to activate it.';
   }
   const next = gamepadControls(pad);
   if (padReconnecting) {

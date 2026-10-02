@@ -89,6 +89,7 @@ their proportions and the dashboard stays along the bottom.
 
 **Controllers work through the whole campaign**, including Cloudfall. Connect a
 standard Xbox, PlayStation or compatible gamepad and press a button to activate it.
+The GameSir G7 SE also works in its unmapped Linux HID mode.
 Left stick / D-pad moves; A / Cross starts, drops and jumps. Hold A / Cross or
 RT / R2 for lift when landing on the carrier. On deck, X / Square or RT / R2
 fires and B / Circle throws grenades. In Cloudfall, A / Cross, X / Square or
@@ -99,7 +100,11 @@ Disconnecting an active controller pauses and releases its inputs. Reconnecting
 requires releasing held buttons before resuming. Keyboard and touch remain usable.
 
 Browsers may require an initial click or keyboard press to enable audio. Controller
-input uses the browser's [standard Gamepad mapping](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API).
+input prefers the browser's [standard Gamepad mapping](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API).
+Some controllers report an empty mapping even when connected. The GameSir G7 SE
+(USB `3537:1082`, 15 buttons / 8 axes) has an explicit fallback for its face
+buttons, analog trigger, D-pad hat and menu buttons. Unknown layouts are identified
+in Options instead of silently disappearing; their inputs are not guessed.
 
 Directional controls request velocity through the same acceleration as the
 instrument yoke. Releasing the keys brakes gradually; pressing the opposite
