@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Fly the helicopter. Time the drop. Land in the hay. Things change when you miss." />
+    <title>Slop Copter</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23fff'/%3E%3Cpath d='M4 6h24v2H4zm11 2h2v4h-2zM2 13h7v4H2zm8-2h13v3h4v8H10zm2 13h2v2h9v-2h2v4H9v-2h3z' fill='%23000'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main class="game-screen" id="game-screen" aria-label="Slop Copter game">
+      <nav class="toolbar" aria-label="Game controls">
+        <div class="game-identity"><span id="game-title">SLOP COPTER</span><span class="mode-label" id="mode-label">● CLASSIC</span></div>
+        <div class="menu-actions">
+          <button id="restart" disabled>New game <span class="shortcut">R</span></button>
+          <button id="pause" disabled>Pause <span class="shortcut">P</span></button>
+          <button id="levels" hidden disabled aria-haspopup="dialog" aria-controls="level-dialog">Levels</button>
+          <button id="help" aria-expanded="false" aria-controls="instructions">Options <span class="shortcut">?</span></button>
+          <button id="fullscreen" aria-pressed="false">Fullscreen <span class="shortcut">F</span></button>
+        </div>
+      </nav>
+      <dialog id="level-dialog" class="level-dialog" aria-labelledby="level-heading">
+        <form id="level-form">
+          <button id="close-levels" type="button" class="close-help" aria-label="Close level selector">×</button>
+          <p class="dialog-eyebrow">TEST FLIGHT</p>
+          <h2 id="level-heading">Jump to a level</h2>
+          <label for="level-select">Level or scene</label>
+          <select id="level-select" aria-describedby="level-description"></select>
+          <p id="level-description"></p>
+          <button type="submit" class="primary-button">Start selected level ↗</button>
+          <p class="level-note">Starts a fresh test run. High scores are preserved.<br />The URL opens this level again. R / New game returns to normal play.</p>
+          <p id="level-link"></p>
+        </form>
+      </dialog>
+      <div class="playfield" id="playfield">
+        <canvas id="game" width="1024" height="672" tabindex="0" aria-label="Slop Copter. Hold arrow keys or W A S D to accelerate; release to slow down. Space or click drops the stuntman. P pauses. R restarts. F toggles fullscreen.">Your browser needs Canvas support to play Slop Copter.</canvas>
+        <div class="overlay" id="overlay">
+          <div class="dialog">
+            <p class="dialog-eyebrow" id="dialog-eyebrow">SLOP COPTER</p>
+            <h1 id="dialog-title">Ready for takeoff?</h1>
+            <p id="dialog-copy">Hold the arrow keys to accelerate. Release to slow down.<br />Press Space to drop into the hay behind the horse.</p>
+            <div class="key-guide" id="key-guide"><span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> fly</span><span><kbd>SPACE</kbd> drop</span></div>
+            <button id="begin" class="primary-button" disabled>Loading sprites…</button>
+            <p class="dialog-footnote" id="dialog-footnote">Five jumps. Make them count. · F for fullscreen</p>
+          </div>
+        </div>
+        <section class="instructions" id="instructions" aria-label="Options and controls" hidden>
+          <button id="close-help" class="close-help" aria-label="Close options">×</button>
+          <h2>Options</h2>
+          <fieldset class="audio-settings">
+            <legend>Audio</legend>
+            <label class="sound-toggle"><input id="sound" type="checkbox" checked /> Enable audio</label>
+            <div class="volume-control">
+              <label for="music-volume">Music <output id="music-volume-value" for="music-volume">100%</output></label>
+              <input id="music-volume" type="range" min="0" max="100" step="1" value="100" />
+            </div>
+            <div class="volume-control">
+              <label for="effects-volume">Sound effects <output id="effects-volume-value" for="effects-volume">100%</output></label>
+              <input id="effects-volume" type="range" min="0" max="100" step="1" value="100" />
+            </div>
+          </fieldset>
+          <h3>How to play</h3>
+          <p id="level-help" hidden><strong>Levels unlocked.</strong> Open Levels in the toolbar to jump to a chapter, fight or cutscene. Your saved high scores stay untouched. Bookmark a level URL to return later.</p>
+          <p id="assault-help" hidden><strong>Air assault.</strong> Arrows, WASD or touch arrows fly; the cannon fires automatically. Collect P for cannon power, + for repairs and W for wingmen. Defeat the Iron Vulture, then reach the friendly carrier. <strong>Carrier landing:</strong> Up / W / Space powers lift and consumes fuel. Left / Right or A / D tilts; releasing keeps your momentum. Catch the moving carrier, match its speed, level out and settle gently on the lit aft pad. Watch fuel, drift and sink speed. A crash automatically retries the landing with full fuel. <strong>On deck:</strong> Arrows / WASD move, J shoots, K jumps (hold for height), L throws a grenade. Down ducks; Up aims upward. Down + K drops through catwalks. H supplies a heavy machine gun. Touch: red shoots, yellow jumps, green throws. Gamepad: left stick / D-pad moves, X / Square shoots, A / Cross jumps, B / Circle throws, Start pauses. Defeat automatically restarts the current checkpoint. P pauses; R restarts the whole game.</p>
+          <p id="runner-help" hidden><strong>Rooftop escape.</strong> You run automatically. Press Space, ↑ or touch to jump; hold for longer leaps. Clear the roof edges and hop over crates to keep your speed. When the rescue helicopter flies low, jump to grab its lit boarding rail. After a fall, Space or tap retries the current rooftop or pickup checkpoint. R starts the entire game again.</p>
+          <p id="orbit-help" hidden><strong>Cloudfall — keyboard only.</strong> The collapsing lift leads directly into the fall. Left / Right or A / D move. J or Space jumps on a ledge and fires while airborne. Release and press again in the air to fire your gun; hold to keep firing. Recoil slows your fall. Landing or stomping white enemies refills your eight-shot charge. Red spiked enemies must be shot. Rock ledges are safe; braced crates break when shot. Stay airborne to build combos, then land to bank rewards. Collect gems to trigger stronger gunfire during Gem High. Defeat automatically restarts your current descent checkpoint. P pauses; R restarts the entire game.</p>
+          <p><strong>01 / Fly.</strong> Hold the arrow keys or WASD to accelerate. Release to slow to a hover. Press the opposite direction to brake, then accelerate back the other way.</p>
+          <p>You can also use the touch buttons or drag the instrument yoke.</p>
+          <div class="flight-tuning">
+            <label for="acceleration">Acceleration <output id="acceleration-value" for="acceleration">0.50 s to full speed</output></label>
+            <input id="acceleration" type="range" min="0.2" max="1.5" step="0.05" value="0.5" aria-describedby="acceleration-help" />
+            <div class="range-labels"><span>Quick response</span><span>Gentle buildup</span></div>
+            <p id="acceleration-help">Set how long a held direction takes to reach full speed. Tap for a nudge; hold to build speed. Your setting is saved.</p>
+          </div>
+          <p><strong>02 / Drop.</strong> Press Space or click the sky. Aim for the hay behind the horse. Clouds slow your fall and knock you sideways.</p>
+          <p><strong>03 / Repeat.</strong> Height × level = points. Land all five jumps to advance. P pauses, R starts over, F toggles fullscreen. Your best score stays in this browser.</p>
+          <p><strong>Automatic retries.</strong> Each new chapter saves a checkpoint for this run. After a defeat, the current checkpoint restarts automatically after a brief pause. Rooftop falls retry the rooftops. R / New game starts from the beginning.</p>
+          <p class="credits">Original game & art by Duane Blehm, 1986–1987.</p>
+        </section>
+      </div>
+      <section class="touch-controls" aria-label="Touch flight controls">
+        <div class="dpad"><button data-direction="up" aria-label="Fly up">↑</button><button data-direction="left" aria-label="Fly left">←</button><button data-direction="down" aria-label="Fly down">↓</button><button data-direction="right" aria-label="Fly right">→</button></div>
+        <button id="drop-button" class="drop-button" disabled>DROP <span>↓</span></button>
+        <div id="deck-actions" class="deck-actions" hidden aria-label="Deck combat controls">
+          <button data-deck-action="shoot" class="deck-shoot" aria-label="Shoot (J)" aria-pressed="false"><b>J</b><small>SHOOT</small></button>
+          <button data-deck-action="jump" class="deck-jump" aria-label="Jump (K)" aria-pressed="false"><b>K</b><small>JUMP</small></button>
+          <button data-deck-action="grenade" class="deck-grenade" aria-label="Throw grenade (L)" aria-pressed="false"><b>L</b><small>BOMB</small></button>
+        </div>
+      </section>
+      <div class="statusbar"><span id="status" role="status" aria-live="polite">Loading original flight equipment…</span><span id="flight-status">LEVEL 01 · WALK</span></div>
+    </main>
+    <noscript><p class="noscript">Enable JavaScript to load and play Slop Copter.</p></noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

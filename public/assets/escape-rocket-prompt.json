@@ -1,0 +1,8 @@
+{
+  "mode": "built-in image_gen",
+  "source": "escape-rocket.png",
+  "references": [
+    "spacecraft-boss-v2-atlas.png"
+  ],
+  "prompt": "Production game sprite, ONE vertical military escape rocket, nose UP, exhaust opening DOWN, centered and fully contained. Actual transparent background, no presentation backdrop. Use the attached image only as MATERIAL/ART STYLE reference: dirty ivory armor, strong charcoal outlines, warm bronze hardware, olive-gray machinery, purposeful chunky 16-bit arcade pixel clusters. This is a slim rocket, NOT a spacecraft or robot. Tall approximately 1:3.2 silhouette, bullet-shaped nose cone, segmented ivory fuselage, small faded red warning stripe, riveted access hatches, copper fuel plumbing, recessed dark exhaust bell, two swept stabilizer fins at the bottom. Small grab handles and an exterior maintenance foothold halfway up the right side so an existing separate character sprite can ride it. Serious detailed hand-crafted pixel art at Metal Slug-like quality; no smooth 3D render or blurry photographic shading. Single intact rocket only, no character, no flame, no smoke, no other objects, no text, no ground, no shadows outside silhouette. Fill most of the portrait canvas with the full rocket while leaving comfortable transparent margins. All outlines sharp and closed."
+}

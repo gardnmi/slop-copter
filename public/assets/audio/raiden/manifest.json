@@ -1,0 +1,116 @@
+{
+  "repository": "https://github.com/t3m1X/Project-I-Ninja-Dolphin",
+  "commit": "49451ea884c35f002a9861ce893fc8c87391b608",
+  "source_directory": "Game/sfx",
+  "assets": [
+    {
+      "name": "shot_regular",
+      "bytes": 595244,
+      "seconds": 3.1,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "91bb59e163bfef069416a00e4392ee9486faa5a02c465a2482343d1e7c7fb29f",
+      "start": 0.045,
+      "duration": 0.1,
+      "output_bytes": 723,
+      "output_sha256": "b751e78d378ba3eb0226c8e5cec460b754a444eab7e2236e9f905a05867a759a"
+    },
+    {
+      "name": "destroy_s_air",
+      "bytes": 601644,
+      "seconds": 3.133,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "ae45d8433f4c84a01f264d390f6891d37813a9531522530e9b1d729fbf440221",
+      "start": 0.06,
+      "duration": 0.12,
+      "output_bytes": 873,
+      "output_sha256": "69f0b83d9f3b3117a10305a9bbd3a7ca662d79ed68a83c89ba6293b9f5702675"
+    },
+    {
+      "name": "destroy_b_air",
+      "bytes": 787244,
+      "seconds": 4.1,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "1ce3ac1bca78927695282cfd0043107e2fa8f7c5d04fc08d1ad0d5ad79823ea0",
+      "start": 0.06,
+      "duration": 1.09,
+      "output_bytes": 7567,
+      "output_sha256": "f0cc0e900bfae6c4727ab2243314ef4b57e034acb4e4f67e0048093a9c08001f"
+    },
+    {
+      "name": "destroy_s_tank",
+      "bytes": 748844,
+      "seconds": 3.9,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "c30916a5e1f31c96937c6a19945084048ea17afce3663fee4eef0f51e1f17efb",
+      "start": 0.06,
+      "duration": 0.89,
+      "output_bytes": 4756,
+      "output_sha256": "9f49910f6ee7c9967fb0b34b0b3849bc321907ccf71d7f174298b600cbeebb96"
+    },
+    {
+      "name": "destroy_b_tank",
+      "bytes": 838444,
+      "seconds": 4.367,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "bfcb9ccfaca5c84f553065f1e1b58cd76feff84e87cce3aaf065d22bb49e6f86",
+      "start": 0.085,
+      "duration": 1.33,
+      "output_bytes": 9396,
+      "output_sha256": "a5d155088c5d76594c9a939c33871d5d1ceaa8e5e9d06a6dafc505c1d7f2cde3"
+    },
+    {
+      "name": "destroy_boss",
+      "bytes": 1123244,
+      "seconds": 5.85,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "4255d39621b5f72a62be4cc7505f648454f66c0526c3ef51252a81fef1907d92",
+      "start": 0.06,
+      "duration": 2.835,
+      "output_bytes": 17600,
+      "output_sha256": "fccbe3eb8fa1ddeb010af4a8afb9322c3e2ec355d794c8413d7550b3a95592e2"
+    },
+    {
+      "name": "powerup",
+      "bytes": 1459244,
+      "seconds": 7.6,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "0b0a4d9643ebd66d2052bca78b11cd4f64f00955b8f9500aa024a16f81bda5fc",
+      "start": 0.045,
+      "duration": 0.38,
+      "output_bytes": 2633,
+      "output_sha256": "e06b471565342de86de184cb09cd25161921fc626a65fbd18f77a2c4df164347",
+      "processing": "90 Hz high-pass removes the recorded DC tail"
+    },
+    {
+      "name": "powerup_max",
+      "bytes": 697644,
+      "seconds": 3.633,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "efe5b337ef67ed155fdc8b7c2bbccd920ed8f0f4a4bfc0c7c626c6ec0dec8e27",
+      "start": 0.05,
+      "duration": 0.62,
+      "output_bytes": 6527,
+      "output_sha256": "bf383b6a91d6f00a05999badb1bb44b4ef8be18d707ba09db12f5ec7d232387a"
+    },
+    {
+      "name": "player_explosion",
+      "bytes": 950444,
+      "seconds": 4.95,
+      "rate": 48000,
+      "channels": 2,
+      "sha256": "83cbfa642c25a9935665346c0c89dd469ddf0327a3bda96e043a8c9e6c88c7b0",
+      "start": 0.06,
+      "duration": 1.93,
+      "output_bytes": 11528,
+      "output_sha256": "b5c57d6ae099f867afd6af239036c018c9d0ea46d7d6636727777ca1616abf69"
+    }
+  ]
+}

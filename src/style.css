@@ -1,0 +1,160 @@
+@font-face {
+  font-family: LocalMono;
+  src: local("JetBrains Mono"), local("SFMono-Regular"), local("DejaVu Sans Mono");
+  font-display: swap;
+}
+:root {
+  font-family: LocalMono, "Courier New", monospace;
+  font-synthesis: none;
+  color-scheme: light;
+  --paper: #fff;
+  --ink: #20221f;
+  --subtle: #696c64;
+  --line: #c3c5bc;
+  --accent: #20221f;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
+body { background: var(--paper); color: var(--ink); }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+[hidden] { display: none !important; }
+.game-screen {
+  width: 100%; height: 100dvh;
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.game-screen:fullscreen { height: 100%; }
+.toolbar {
+  display: flex; flex: 0 0 38px; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 0 18px; border-bottom: 1px solid var(--line); user-select: none;
+}
+.game-identity, .menu-actions { display: flex; align-items: center; gap: 18px; }
+#game-title { font-size: 11px; font-weight: bold; letter-spacing: .09em; }
+.mode-label { font-size: 9px; letter-spacing: .06em; white-space: nowrap; color: var(--subtle); }
+.toolbar button { border: 0; background: transparent; padding: 7px 6px; font-size: 10px; white-space: nowrap; }
+.shortcut { font-size: 9px; color: var(--subtle); margin-left: 7px; }
+.playfield { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; }
+canvas {
+  display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+  image-rendering: pixelated; touch-action: none; outline: none;
+}
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; padding: 16px; }
+.dialog, .instructions {
+  pointer-events: auto; background: var(--paper); color: var(--ink);
+  border: 2px solid var(--ink); padding: 28px; max-width: 100%;
+}
+.dialog { width: 400px; text-align: center; }
+.dialog-eyebrow { font-size: 10px; letter-spacing: .12em; color: var(--subtle); margin: 0 0 20px; }
+h1, h2 { font-family: Georgia, "Times New Roman", serif; font-size: 31px; line-height: 1.15; font-weight: normal; margin: 0 0 18px; }
+#dialog-copy { font-size: 11px; line-height: 1.8; margin: 0 0 20px; }
+.key-guide { display: flex; gap: 20px; justify-content: center; font-size: 10px; margin-bottom: 24px; }
+.key-guide > span { display: flex; align-items: center; gap: 3px; }
+kbd { font: inherit; border: 1px solid var(--line); padding: 3px 5px; min-width: 21px; }
+.primary-button { min-height: 42px; min-width: 200px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: 12px; }
+.primary-button:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
+.dialog-footnote { font-size: 8px; color: var(--subtle); margin: 16px 0 0; }
+.instructions { position: absolute; z-index: 2; width: 500px; max-width: calc(100% - 32px); max-height: calc(100% - 32px); overflow-y: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.instructions p { font-size: 11px; line-height: 1.8; margin: 0 0 18px; }
+.instructions strong { display: block; margin-bottom: 5px; }
+.instructions .credits { color: var(--subtle); font-size: 9px; margin: 20px 0 0; }
+.instructions h3 { font-size: 13px; margin: 24px 0 16px; }
+.audio-settings { border: 1px solid var(--line); padding: 16px; margin: 0 0 22px; font-size: 11px; }
+.audio-settings legend { padding: 0 6px; font-weight: bold; }
+.sound-toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+.sound-toggle input { accent-color: var(--accent); }
+.volume-control + .volume-control { margin-top: 18px; }
+.volume-control label { display: flex; justify-content: space-between; gap: 12px; }
+.volume-control output { color: var(--subtle); }
+.volume-control input { width: 100%; margin: 12px 0 0; accent-color: var(--accent); }
+.volume-control input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.flight-tuning { border-block: 1px solid var(--line); padding: 14px 0; margin: 0 0 18px; font-size: 11px; }
+.flight-tuning label { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between; font-weight: bold; }
+.flight-tuning output { color: var(--subtle); font-weight: normal; }
+.flight-tuning input { width: 100%; margin: 14px 0 8px; accent-color: var(--accent); }
+.range-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--subtle); }
+.flight-tuning #acceleration-help { margin: 12px 0 0; font-size: 10px; }
+.close-help { position: absolute; top: 10px; right: 12px; border: 0; background: transparent; font-size: 24px; }
+.level-dialog { width: 440px; max-width: calc(100% - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 28px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); }
+.level-dialog::backdrop { background: #06080cbf; }
+.level-dialog label { display: block; font-size: 11px; margin-bottom: 9px; }
+.level-dialog select { width: 100%; padding: 12px 8px; font: inherit; font-size: 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+.level-dialog select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#level-description { min-height: 52px; font-size: 11px; line-height: 1.7; margin: 16px 0; }
+.level-dialog .primary-button { width: 100%; }
+.level-note, #level-link { font-size: 10px; line-height: 1.7; color: var(--subtle); margin: 16px 0 0; }
+#level-link { margin-top: 8px; }
+.statusbar { display: flex; flex: 0 0 26px; align-items: center; justify-content: space-between; gap: 16px; padding: 0 14px; font-size: 9px; border-top: 1px solid var(--line); }
+#status { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#flight-status { flex-shrink: 0; color: var(--subtle); }
+.touch-controls { display: flex; flex: 0 0 66px; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 14px; border-top: 1px solid var(--line); }
+.dpad { display: flex; gap: 6px; }
+.dpad button, .drop-button { border: 1px solid var(--line); background: var(--paper); height: 46px; min-width: 44px; touch-action: none; user-select: none; }
+.dpad button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
+.drop-button { width: 140px; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: space-around; }
+.drop-button span { font-size: 21px; }
+.deck-actions { display: flex; gap: 6px; }
+.deck-actions[hidden] { display: none; }
+body.orbit .touch-controls { display: none; }
+.deck-actions button { width: 48px; height: 48px; border: 2px solid #d1ccb3; border-radius: 50%; color: #182226; touch-action: none; user-select: none; box-shadow: inset 0 -4px #0003; }
+.deck-actions b { display: block; font-size: 17px; line-height: 18px; }
+.deck-actions small { display: block; font-size: 7px; font-weight: bold; }
+.deck-actions button[aria-pressed=true] { transform: translateY(2px); box-shadow: inset 0 2px #0004; }
+.deck-shoot { background: #ef6856; }
+.deck-jump { background: #f4cd63; }
+.deck-grenade { background: #8fca71; }
+body.deck .touch-controls { flex-basis: 106px; gap: 8px; padding: 6px 10px; }
+body.deck .dpad { display: grid; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(2, 42px); gap: 2px; }
+body.deck .dpad button { min-width: 0; height: 42px; }
+body.deck [data-direction=up] { grid-column: 2; }
+body.deck [data-direction=left] { grid-column: 1; grid-row: 2; }
+body.deck [data-direction=down] { grid-column: 2; grid-row: 2; }
+body.deck [data-direction=right] { grid-column: 3; grid-row: 2; }
+.noscript { position: fixed; inset: auto 0 0; background: var(--paper); padding: 20px; text-align: center; }
+body.digital { --paper: #06080c; --ink: #ccfbd5; --subtle: #74a780; --line: #203a2b; --accent: #8bffa5; color-scheme: dark; }
+body.digital .mode-label { color: #8bffa5; }
+body.combat .mode-label { color: #ff8d9d; }
+body.digital .primary-button { background: #8bffa5; color: #06080c; }
+body.runner { --paper: #343642; --ink: #eeeeF3; --subtle: #c0c1cc; --line: #606372; --accent: #f2d9da; }
+body.runner .mode-label { color: #eeeef3; }
+body.runner .primary-button { background: #d7d9e2; color: #282b37; }
+body.assault { --paper: #142632; --ink: #e4ecd9; --subtle: #acbcb6; --line: #415c63; --accent: #e8c693; }
+body.orbit { --paper: #000000; --ink: #ffffff; --subtle: #ffffff; --line: #ff0000; --accent: #ff0000; }
+body.orbit .mode-label { color: #ffffff; }
+body.orbit .primary-button { background: #ff0000; color: #ffffff; }
+body.on-foot .dpad { display: none; }
+body.on-foot .drop-button { width: 100%; }
+@media (pointer: fine) and (min-width: 801px) { .touch-controls { display: none; } }
+@media (max-width: 700px) {
+  #game-title, .shortcut, #flight-status { display: none; }
+  .toolbar { padding: 0 10px; gap: 4px; }
+  .menu-actions { gap: 4px; }
+  .toolbar button { font-size: 9px; padding: 8px 4px; }
+  .mode-label { font-size: 8px; }
+  .dialog { width: 350px; padding: 24px 16px; }
+  h1 { font-size: 28px; }
+  .key-guide { gap: 12px; font-size: 9px; }
+  .statusbar { font-size: 8px; padding: 0 10px; }
+  .drop-button { width: 128px; }
+  /* Mode names change during cinematics; reserve both rows so the canvas
+     cannot resize when a longer label wraps. */
+  .toolbar { display: grid; grid-template-columns: 1fr; grid-template-rows: 18px 26px; gap: 0; flex: 0 0 46px; min-height: 46px; }
+  .menu-actions { justify-content: space-between; }
+  .level-dialog { padding: 24px 18px; }
+}
+@media (max-height: 500px) {
+  body.deck .touch-controls { flex-basis: 58px; }
+  body.deck .dpad { display: flex; }
+  body.deck .dpad button { width: 42px; }
+  .dialog { padding: 14px 22px; }
+  .dialog-eyebrow { margin-bottom: 8px; }
+  h1 { font-size: 25px; margin-bottom: 10px; }
+  #dialog-copy { margin-bottom: 12px; font-size: 10px; }
+  .key-guide { display: none; }
+  .dialog-footnote { margin-top: 10px; }
+  .touch-controls { flex-basis: 52px; padding: 4px 14px; }
+  .dpad button, .drop-button { height: 42px; }
+}
