@@ -25,13 +25,17 @@ npm run deploy
 command builds the game and uploads `dist/` with Wrangler 4.138.0, matching the
 version used by Omacontra. GitHub pushes do not deploy automatically.
 
-Wrangler uses its existing local OAuth login; run `npx --yes wrangler@4.138.0
-login` if authentication expires. Credentials and `.wrangler/` state are never
+Wrangler uses its existing local OAuth login; run `npx --yes wrangler@4.138.0 login`
+if authentication expires. Credentials and `.wrangler/` state are never
 committed. For a new account/project, initialize once before the first deploy:
 
 ```sh
-npx --yes wrangler@4.138.0 pages project create slop-copter --production-branch main
+npx --yes wrangler@4.138.0 pages project create slop-copter --production-branch main --force
 ```
+
+The create-only `--force` flag keeps this on Pages instead of Wrangler's new
+Workers delegation. It is unnecessary for subsequent deployments to the existing
+Pages project; `npm run deploy` does not use it.
 
 After deployment, open the production URL and check the opening screen, Start,
 audio controls and a direct chapter link such as `?level=landing`. The production
