@@ -1,0 +1,28 @@
+{
+  "title": "Slop Copter — gameplay trailer",
+  "source": "screenrecording-2026-10-02_12-22-38.mp4",
+  "fps": 60,
+  "clips": [
+    {"name":"One simple job", "start":0.4, "duration":4.0, "caption":"ONE SIMPLE JOB.", "subcaption":"LAND IN THE HAY.", "light":true, "audio":0.7},
+    {"name":"Matrix conversion", "start":33.2, "duration":3.0, "caption":"THEN THE RULES CHANGE.", "audio":0.25},
+    {"name":"Bandana reveal", "start":58.8, "duration":2.6, "crop":"2400:960:80:180", "audio":0.25},
+    {"name":"Counterattack", "start":65.0, "duration":3.4, "audio":0.28},
+    {"name":"Chrome horse", "start":96.5, "duration":2.3, "audio":0.3},
+    {"name":"Self destruct", "start":105.5, "duration":1.9, "audio":0.4},
+    {"name":"Tail hit and leap", "start":117.2, "duration":3.3, "audio":0.45},
+    {"name":"Rooftop escape", "start":134.0, "duration":3.0, "audio":0.28},
+    {"name":"Helicopter grab", "start":146.8, "duration":3.0, "audio":0.25},
+    {"name":"Air assault", "start":168.5, "duration":4.0, "audio":0.3},
+    {"name":"Iron Vulture", "start":223.0, "duration":3.0, "audio":0.3},
+    {"name":"Carrier landing", "start":250.0, "duration":2.5, "audio":0.22},
+    {"name":"Deck gunship", "start":268.0, "duration":3.0, "audio":0.32},
+    {"name":"Flamethrower", "start":285.0, "duration":3.0, "audio":0.32},
+    {"name":"Spacecraft", "start":302.0, "duration":3.0, "audio":0.32},
+    {"name":"The Warden", "start":344.0, "duration":2.5, "audio":0.32},
+    {"name":"Cloudfall", "start":361.0, "duration":3.5, "audio":0.35},
+    {"name":"Slop Eater", "start":400.5, "duration":2.5, "audio":0.35},
+    {"name":"Title and play link", "start":38.0, "duration":6.5, "card":true, "audio":0.0}
+  ],
+  "music": "public/assets/audio/metallic-tension.ogg",
+  "music_start": 20.0
+}
